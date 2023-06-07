@@ -1,62 +1,68 @@
-name: 'mydjango'
+# This file describes an application. You can have multiple applications
+# in the same project.
+#
+# See https://docs.platform.sh/user_guide/reference/platform-app-yaml.html
 
-# The language and version for your app.
-type: 'python 3.10'
+# The name of this app. Must be unique within a project.
+name: 'app'
 
-# Global dependencies to be added and cached and then available as commands.
+# The runtime the application uses.
+type: 'python:3.10'
+
+# The build-time dependencies of the app.
 dependencies:
-    python:
-        runtime/runtime: '^3.10'
+    python3:
 
-# The app's relationships (connections) with services or other applications.
-# The key is the relationship name that can be viewed in the app.
-# The value is specific to how the service is configured.
+# The relationships of the application with services or other applications.
+#
+# The left-hand side is the name of the relationship as it will be exposed
+# to the application in the PLATFORM_RELATIONSHIPS variable. The right-hand
+# side is in the form `<service name>:<endpoint name>`.
 relationships:
-    postgresql_database: "database1:postgresql"
+    database: "db:postgresql"
 
-# Scripts that are run as part of the build and deploy process.
-hooks:
-    # Build hooks can modify app files on disk but not access any services like databases.
-    build: ./build.sh
-    # Deploy hooks can access services but the file system is now read-only.
-    deploy: ./deploy.sh
-    # Post deploy hooks run when the app is accepting outside requests.
-    post_deploy: ./post_deploy.sh
-
-# The size of the app's persistent disk (in MB).
-disk: 2048
-
-# Define writable, persistent filesystem mounts.
-# The key is the directory path relative to the application root.
-# In this case, `web-files` is just a unique name for the mount.
-mounts:
-    'web/files':
-        source: local
-        source_path: 'web-files'
-
-# The app's configuration when it's exposed to the web.
+# The configuration of app when it is exposed to the web.
 web:
+    # Whether your app should speak to the webserver via TCP or Unix socket
+    # https://docs.platform.sh/configuration/app-containers.html#upstream
+    upstream:
+        socket_family: unix
+    # Commands are run once after deployment to start the application process.
+    commands:
+        start: "pipenv run gunicorn -w 4 -b unix:$SOCKET myapp.wsgi:application"
     locations:
-        '/':
-            # The app's public directory relative to its root.
-            root: 'public'
-            # A front controller to determine how to handle requests.
-            passthru: '/app.pyhon'
-        # Allow uploaded files to be served, but don't run scripts.
-        # Missing files get sent to the front controller.
-        '/files':
-            root: 'web/files'
-            scripts: false
+        "/":
+            passthru: true
+        "/static":
+            root: "static"
+            expires: 1h
             allow: true
-            passthru: '/app.python'
-          operations:
-     RUNTIME_OPERATION_NAME:
-     role: USER_ROLE
-     commands:
-     operations:
-    manual-migration:
-    role: admin
-    commands:
-    start: python manage.py manual_migration  start: COMMAND
-    commands:
-    start: python server.py
+
+# The size of the persistent disk of the application (in MB).
+disk: 512
+
+# Set a local R/W mount for logs
+mounts:
+    'logs':
+        source: local
+        source_path: logs
+
+# The hooks executed at various points in the lifecycle of the application.
+hooks:
+  # The build hook runs before the application is deployed, and is useful for
+  # assembling the codebase.
+  build: |
+    pipenv install --system --deploy
+
+    mkdir logs
+    pipenv run python manage.py collectstatic
+    rm -rf logs
+  deploy: |
+    pipenv run python manage.py migrate
+
+source:
+  operations:
+    auto-update:
+      command: |
+        curl -fsS https://raw.githubusercontent.com/platformsh/source-operations/main/setup.sh | { bash /dev/fd/3 sop-autoupdate; } 3<&0
+    
