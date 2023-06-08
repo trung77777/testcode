@@ -10,3 +10,9 @@ disk: 1024
 web:
     commands:
         start: python app.py
+web:
+    locations:
+        '/':
+            passthru: true
+            request_buffering:
+                enabled: false

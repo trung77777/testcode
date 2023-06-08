@@ -4,3 +4,8 @@
 "https://www.master-7rqtwti-ssnv4gcw46hlg.eu-5.platformsh.site.":
     type: upstream
     upstream: "api:http"
+"https://www.master-7rqtwti-ssnv4gcw46hlg.eu-5.platformsh.site./ws":
+    type: upstream
+    upstream: "ws-app:http"
+    cache:
+        enabled: false
