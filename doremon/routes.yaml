@@ -1,10 +1,10 @@
-"https://master-7rqtwti-frizvqik7y4qm.us.platformsh.site.":
+"http://www.master-7rqtwti-frizvqik7y4qm.us.platformsh.site.":
     type: upstream
     upstream: "app:http"
-"https://www.master-7rqtwti-frizvqik7y4qm.us.platformsh.site.":
+"http://www.master-7rqtwti-frizvqik7y4qm.us.platformsh.site.":
     type: upstream
     upstream: "api:http"
-"https://www.master-7rqtwti-frizvqik7y4qm.us.platformsh.site./ws":
+"http://www.master-7rqtwti-frizvqik7y4qm.us.platformsh.site./ws":
     type: upstream
     upstream: "ws-app:http"
     cache:
