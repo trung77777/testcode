@@ -1,4 +1,4 @@
-name: psss
+name: youdjango
 
 # The type of the application to build
 type: 'python:3.10'
