@@ -1,4 +1,4 @@
-name: youdjango
+name: doremon
 
 # The type of the application to build
 type: 'python:3.10'
