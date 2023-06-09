@@ -1,11 +1,13 @@
-"http://www.master-7rqtwti-frizvqik7y4qm.us.platformsh.site.":
+# The routes of the project.
+#
+# Each route describes how an incoming URL is going to be processed by Platform.sh.
+#
+# See https://docs.platform.sh/user_guide/reference/routes-yaml.html
+
+"https://master-7rqtwti-r2y3esqehdvd6.us.platformsh.site":
     type: upstream
     upstream: "app:http"
-"http://www.master-7rqtwti-frizvqik7y4qm.us.platformsh.site.":
-    type: upstream
-    upstream: "api:http"
-"http://www.master-7rqtwti-frizvqik7y4qm.us.platformsh.site./ws":
-    type: upstream
-    upstream: "ws-app:http"
-    cache:
-        enabled: false
+
+"https://master-7rqtwti-r2y3esqehdvd6.us.platformsh.site":
+    type: redirect
+    to: "https://master-7rqtwti-r2y3esqehdvd6.us.platformsh.site"
