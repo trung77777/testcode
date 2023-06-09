@@ -4,10 +4,10 @@
 #
 # See https://docs.platform.sh/user_guide/reference/routes-yaml.html
 
-"https://master-7rqtwti-r2y3esqehdvd6.us.platformsh.site":
+"master-7rqtwti-frizvqik7y4qm.us.platformsh.site.":
     type: upstream
     upstream: "app:http"
 
-"https://master-7rqtwti-r2y3esqehdvd6.us.platformsh.site":
+"master-7rqtwti-frizvqik7y4qm.us.platformsh.site.":
     type: redirect
-    to: "https://master-7rqtwti-r2y3esqehdvd6.us.platformsh.site"
+    to: "master-7rqtwti-frizvqik7y4qm.us.platformsh.site."
